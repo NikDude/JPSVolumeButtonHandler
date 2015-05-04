@@ -20,6 +20,7 @@ static CGFloat minVolume                    = 0.00001f;
 @property (nonatomic, assign) CGFloat          initialVolume;
 @property (nonatomic, strong) AVAudioSession * session;
 @property (nonatomic, strong) MPVolumeView   * volumeView;
+@property (nonatomic, strong) NSError        * initializationError;
 
 @end
 
@@ -44,22 +45,22 @@ static CGFloat minVolume                    = 0.00001f;
 }
 
 - (void)dealloc {
-    [self.session removeObserver:self forKeyPath:sessionVolumeKeyPath];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.volumeView removeFromSuperview];
+    if (self.session) {
+        [self.session removeObserver:self forKeyPath:sessionVolumeKeyPath];
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
+    if (self.volumeView) {
+        [self.volumeView removeFromSuperview];
+    }
 }
 
 - (void)setupSession {
     NSError *error = nil;
     self.session = [AVAudioSession sharedInstance];
-    [self.session setCategory:AVAudioSessionCategoryAmbient withOptions:0 error:&error];
-    if (error) {
-        NSLog(@"%@", error);
-        return;
-    }
     [self.session setActive:YES error:&error];
     if (error) {
-        NSLog(@"%@", error);
+        self.session = nil;
+        self.initializationError = error;
         return;
     }
 
@@ -75,6 +76,7 @@ static CGFloat minVolume                    = 0.00001f;
                                              selector:@selector(audioSessionInterrupted:)
                                                  name:AVAudioSessionInterruptionNotification
                                                object:nil];
+    
 }
 
 - (void)audioSessionInterrupted:(NSNotification*)notification {
@@ -119,11 +121,13 @@ static CGFloat minVolume                    = 0.00001f;
 
 #pragma mark - Convenience
 
-+ (instancetype)volumeButtonHandlerWithUpBlock:(JPSVolumeButtonBlock)upBlock downBlock:(JPSVolumeButtonBlock)downBlock {
++ (instancetype)volumeButtonHandlerWithUpBlock:(JPSVolumeButtonBlock)upBlock downBlock:(JPSVolumeButtonBlock)downBlock error:(NSError **)error {
     JPSVolumeButtonHandler *instance = [[JPSVolumeButtonHandler alloc] init];
     if (instance) {
         instance.upBlock = upBlock;
         instance.downBlock = downBlock;
+        if (instance.initializationError)
+            *error = instance.initializationError;
     }
     return instance;
 }

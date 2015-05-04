@@ -19,6 +19,6 @@ typedef void (^JPSVolumeButtonBlock)();
 @property (nonatomic, copy) JPSVolumeButtonBlock downBlock;
 
 // Returns a button handler with the specified up/down volume button blocks
-+ (instancetype)volumeButtonHandlerWithUpBlock:(JPSVolumeButtonBlock)upBlock downBlock:(JPSVolumeButtonBlock)downBlock;
++ (instancetype)volumeButtonHandlerWithUpBlock:(JPSVolumeButtonBlock)upBlock downBlock:(JPSVolumeButtonBlock)downBlock error:(NSError **)error;
 
 @end
