@@ -126,7 +126,7 @@ static CGFloat minVolume                    = 0.00001f;
     if (instance) {
         instance.upBlock = upBlock;
         instance.downBlock = downBlock;
-        if (instance.initializationError)
+        if (error != NULL && instance.initializationError)
             *error = instance.initializationError;
     }
     return instance;
