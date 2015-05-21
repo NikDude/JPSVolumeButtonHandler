@@ -103,7 +103,7 @@ static CGFloat minVolume                    = 0.00001f;
 }
 
 - (void)disableVolumeHUD {
-    self.volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    self.volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(MAXFLOAT, MAXFLOAT, 0, 0)];
     [[[[UIApplication sharedApplication] windows] firstObject] addSubview:self.volumeView];
 }
 
