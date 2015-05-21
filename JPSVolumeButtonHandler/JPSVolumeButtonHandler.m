@@ -35,7 +35,7 @@ static CGFloat minVolume                    = 0.00001f;
         [self disableVolumeHUD];
         
         // Wait for the volume view to be ready before setting the volume to avoid showing the HUD
-        double delayInSeconds = 0.1f;
+        double delayInSeconds = 1.0f;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self setInitialVolume];
