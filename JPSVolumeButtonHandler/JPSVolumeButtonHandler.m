@@ -59,6 +59,7 @@ static CGFloat minVolume                    = 0.00001f;
 - (void)setupSession {
     NSError *error = nil;
     self.session = [AVAudioSession sharedInstance];
+    [self.session setCategory:AVAudioSessionCategoryAmbient error:&error];
     [self.session setActive:YES error:&error];
     if (error) {
         self.session = nil;
@@ -86,11 +87,11 @@ static CGFloat minVolume                    = 0.00001f;
     NSInteger interuptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
     switch (interuptionType) {
         case AVAudioSessionInterruptionTypeBegan:
-            // NSLog(@"Audio Session Interruption case started.");
+             NSLog(@"Audio Session Interruption case started.");
             break;
         case AVAudioSessionInterruptionTypeEnded:
         {
-            // NSLog(@"Audio Session Interruption case ended.");
+             NSLog(@"Audio Session Interruption case ended.");
             NSError *error = nil;
             [self.session setActive:YES error:&error];
             if (error) {
@@ -99,7 +100,7 @@ static CGFloat minVolume                    = 0.00001f;
             break;
         }
         default:
-            // NSLog(@"Audio Session Interruption Notification case default.");
+             NSLog(@"Audio Session Interruption Notification case default.");
             break;
     }
 }
